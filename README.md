@@ -20,7 +20,7 @@ git clone https://github.com/Noxagonal/GodotCppCMakeTemplate.git
 - Generate project files, you will need to provide path to the Godot executable you'll be using with your project, as well as path to the godot project directory. Replace the paths in below example, I recommend absolute paths for now.<br>
 ```
 mkdir build
-cb build
+cd build
 cmake -D GODOT_EXECUTABLE_PATH="<path to godot executable>" -D GODOT_PROJECT_FOLDER_PATH="<path to godot project root>" ..
 ```
 
