@@ -78,26 +78,22 @@ function(get_godot_project_name PROJECT_FOLDER_PATH RESULT_VARIABLE)
 
 endfunction()
 
-function(copy_godot_extension_to_godot_project_folder PROJECT_FOLDER_PATH PROJECT_NAME)
+function(copy_godot_extension_to_godot_project_folder PROJECT_FOLDER_PATH PROJECT_NAME LIBRARY_ENTRY_SYMBOL MAJOR_MINOR_VERSION)
 
 	set(TEMPLATE_GDEXTENSION_PATH "${PROJECT_SOURCE_DIR}/godot_extension/template.gdextension")
 	set(DESTINATION_FOLDER "${PROJECT_FOLDER_PATH}/bin")
 	set(DESTINATION_FILE "${DESTINATION_FOLDER}/${PROJECT_NAME}.gdextension")
 
-	# Copy the template file to the destination
-	file(COPY ${TEMPLATE_GDEXTENSION_PATH} DESTINATION "${DESTINATION_FOLDER}/")
+	# Read contents of the template file.
+	file(READ ${TEMPLATE_GDEXTENSION_PATH} FILE_CONTENTS)
 
-	# Rename the copied file
-	file(RENAME "${DESTINATION_FOLDER}/template.gdextension" ${DESTINATION_FILE})
+	# Replace placeholders of the gdextension file with actual proper names.
+	string(REPLACE "<LIBRARY_ENTRY_SYMBOL>" "${LIBRARY_ENTRY_SYMBOL}" UPDATED_FILE_CONTENTS "${FILE_CONTENTS}")
+	string(REPLACE "<GODOT_MAJOR_MINOR_VERSION>" "${MAJOR_MINOR_VERSION}" UPDATED_FILE_CONTENTS "${UPDATED_FILE_CONTENTS}")
+	string(REPLACE "<GODOT_CPP_PROJECT_NAME>" "${PROJECT_NAME}" UPDATED_FILE_CONTENTS "${UPDATED_FILE_CONTENTS}")
 
-	# Read the contents of the file
-	file(READ ${DESTINATION_FILE} FILE_CONTENTS)
-
-	# Replace all occurrences of <GODOT_CPP_PROJECT_NAME> with the actual project name
-	string(REPLACE "<GODOT_CPP_PROJECT_NAME>" "${PROJECT_NAME}" UPDATED_FILE_CONTENTS "${FILE_CONTENTS}")
-
-	# Write the updated contents back to the file
-	file(WRITE ${DESTINATION_FILE} "${UPDATED_FILE_CONTENTS}")
+	# Create new gdextension file at destination location and copy updated contents to it.
+	file(WRITE ${DESTINATION_FILE} ${UPDATED_FILE_CONTENTS})
 
 endfunction()
 
@@ -184,7 +180,7 @@ set_target_properties(${GODOT_CPP_PROJECT_NAME}
 		RUNTIME_OUTPUT_DIRECTORY		"${PROJECT_BINARY_DIR}/bin/"
 		OUTPUT_NAME 					"${GODOT_CPP_PROJECT_OUTPUT_FILE_NAME}"
 		POSITION_INDEPENDENT_CODE		ON
-		#INTERPROCEDURAL_OPTIMIZATION	ON
+		INTERPROCEDURAL_OPTIMIZATION	ON
 		USE_FOLDERS						ON
 		VS_DEBUGGER_COMMAND				"${GODOT_EXECUTABLE_PATH}"
 		VS_DEBUGGER_COMMAND_ARGUMENTS	"--path ${GODOT_PROJECT_FOLDER_PATH}"
@@ -195,8 +191,14 @@ target_link_libraries(${GODOT_CPP_PROJECT_NAME}
 		godot::cpp
 )
 
-copy_godot_extension_to_godot_project_folder(${GODOT_PROJECT_FOLDER_PATH} ${GODOT_CPP_PROJECT_NAME})
+copy_godot_extension_to_godot_project_folder(
+	${GODOT_PROJECT_FOLDER_PATH}
+	${GODOT_CPP_PROJECT_NAME}
+	"library_init"
+	${GODOT_MAJOR_MINOR_VERSION}
+)
 
+# Copy the resulting binary into Godot project binary folder so that it can be loaded by Godot.
 add_custom_command(TARGET ${GODOT_CPP_PROJECT_NAME} POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy
 		"$<TARGET_FILE:${GODOT_CPP_PROJECT_NAME}>"

@@ -1,7 +1,7 @@
 [configuration]
 
-entry_symbol = "example_library_init"
-compatibility_minimum = "4.2"
+entry_symbol = "<LIBRARY_ENTRY_SYMBOL>"
+compatibility_minimum = "<GODOT_MAJOR_MINOR_VERSION>"
 
 [libraries]
 
