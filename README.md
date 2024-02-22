@@ -4,28 +4,24 @@ Easy to use starting point for Godot C++ workflows using CMake.
 
 You can easily add this to any existing project you are currently working, it does not pollute your godot project files so it is also easy to remove if you decide you do not need C++.
 
-### How to use
+### Getting started
 
 You will need Git and CMake.
 
 - Create Godot project or use an existing one, set up default scene and exit Godot editor.
 
-- In command line or terminal, navigate to a location where you want to clone this repository, it can be inside your godot project but I suggest putting it nearby outside the godot project directory.
+- In command line or terminal, navigate to a location where you want to clone this repository, I suggest putting it nearby outside the Godot project directory.
 
-- Clone this repository.<br>
+- Copy and paste these lines to your command line. Provide paths to Godot executable (non-command-line version), and to your project folder (where project.godot is located).<br>
 ```
 git clone https://github.com/Noxagonal/GodotCppCMakeTemplate.git
-```
-
-- Generate project files, you will need to provide path to the Godot executable you'll be using with your project, as well as path to the godot project directory. Replace the paths in below example, I recommend absolute paths for now.<br>
-```
 cd GodotCppCMakeTemplate
 mkdir build
 cd build
 cmake -D GODOT_EXECUTABLE_PATH="<path to godot executable>" -D GODOT_PROJECT_FOLDER_PATH="<path to godot project root>" ..
 ```
 
-- Open the generated project or solution file in ```build``` directory and start debugging like in any other application, that's it. In Visual Studio, pressing F5 or starting a debug session will open the default scene and start the game, insert breakpoints where-ever you need them. Editing code and re-launching, will immediately recompile and apply the changes. I provided a simple SampleNode class to get started, the sources can be find in the ```src``` folder/filter.
+- Open the generated project or solution file in ```GodotCppCMakeTemplate/build``` directory and start debugging like in any other application. Everything else is already set up for you.
 
 ### Things to consider
 
