@@ -198,6 +198,7 @@ copy_godot_extension_to_godot_project_folder(
 	${GODOT_MAJOR_MINOR_VERSION}
 )
 
+# Copy the resulting binary into Godot project binary folder so that it can be loaded by Godot.
 add_custom_command(TARGET ${GODOT_CPP_PROJECT_NAME} POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E copy
 		"$<TARGET_FILE:${GODOT_CPP_PROJECT_NAME}>"
